@@ -1,0 +1,37 @@
+package com.example.systemtap;
+
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import java.io.IOException;
+
+public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        // Crear un botón simple programáticamente para no necesitar XML extra
+        Button btn = new Button(this);
+        btn.setText("INYECCIÓN DE TOQUE");
+        btn.setOnClickListener(v -> {
+            try {
+                // Comando nativo: envía un toque en las coordenadas X=500, Y=1000
+                Process process = Runtime.getRuntime().exec(new String[]{"su", "-c", "input tap 500 1000"});
+                
+                // Si no usas Root, usa solo: Runtime.getRuntime().exec("input tap 500 1000");
+                
+                int exitCode = process.waitFor();
+                if (exitCode == 0) {
+                    Toast.makeText(this, "✅ Toque Inyectado con Éxito", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "❌ Error: Necesitas permisos ROOT", Toast.LENGTH_LONG).show();
+                }
+            } catch (IOException | InterruptedException e) {
+                Toast.makeText(this, "Error de Sistema: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        
+        setContentView(btn);
+    }
+}
