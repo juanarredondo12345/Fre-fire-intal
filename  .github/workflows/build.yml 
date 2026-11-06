@@ -1,4 +1,4 @@
-name: Build SystemTap
+name: Build FreeFire Aimbot
 
 on: [push]
 
